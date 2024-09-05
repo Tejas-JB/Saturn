@@ -2,16 +2,16 @@ const axios = require('axios');
 
 // Set up your API key and base URL
 const canvasApiKey = '7~BVxVMtMVcF9MnmUcQWA74y9Q2P8uzJWyT9QVG4ceGrEt7vXQGfvuVzFkhuhhyBD2';  // Replace with your actual Canvas API key
-const canvasBaseUrl = 'https://canvas.instructure.com/api/v1';  // Replace <your-institution> with your Canvas domain
+const canvasBaseUrl = 'https://canvas.instructure.com/api/v1';  // Replace with your Canvas domain
 
 // Color coding for courses
 const courseColors = {
-    "PICARD AP PSYCHOLOGY": { color: "#d96135"},
-    "AP US History-PB-6 -Kerr": { color: "#4835d9" },
-    "AP English Language & Composition": { color: "#FAE700"},
-    "AP Statistics-Mr.Shieh": { color: "#35d961"},
-    "2024-25 Digital Photo 1": { color: "#d93561"},
-    "AP Physics 1-PA-1 Tandon": { color: "#37C88E"},
+    "PICARD AP PSYCHOLOGY": "#d96135",
+    "AP US History-PB-6 -Kerr": "#4835d9",
+    "AP English Language & Composition": "#FAE700",
+    "AP Statistics-Mr.Shieh": "#35d961",
+    "2024-25 Digital Photo 1": "#d93561",
+    "AP Physics 1-PA-1 Tandon": "#37C88E",
     // Add more courses here
 };
 
@@ -24,9 +24,7 @@ async function getCourses() {
             }
         });
 
-        const courses = response.data;
-        return courses;
-
+        return response.data;  // Return the list of courses
     } catch (error) {
         console.error('Error fetching courses:', error.response ? error.response.data : error.message);
         throw error;
@@ -42,39 +40,48 @@ async function getAssignments(courseId) {
             }
         });
 
-        const assignments = response.data;
-        return assignments;
-
+        return response.data;  // Return the list of assignments for the course
     } catch (error) {
         console.error('Error fetching assignments:', error.response ? error.response.data : error.message);
         throw error;
     }
 }
 
-// Function to prepare assignments for the calendar
+// Function to prepare JSON objects for each assignment
 async function prepareAssignments() {
-    const events = [];
-    const courses = await getCourses();
+    const events = [];  // Array to store assignment JSON objects
+    const courses = await getCourses();  // Fetch the list of courses
 
+    // Loop through each course to get assignments
     for (let course of courses) {
-        // Skip courses with "undefined" names or not in courseColors
-        if (!course.name || !courseColors[course.name]) {
-            continue;
-        }
+        const assignments = await getAssignments(course.id);  // Fetch assignments for the course
 
-        const assignments = await getAssignments(course.id);
+        // Loop through each assignment to create a JSON object
         for (let assignment of assignments) {
-            // Push assignments to the events array
-            events.push({
-                title: courseColors[course.name].initial,  // Initial of the course
-                start: assignment.due_at,  // Due date of the assignment
-                backgroundColor: courseColors[course.name].color,  // Course color
-                borderColor: courseColors[course.name].color,  // Border same as background color
-                textColor: "#fff",  // Text color white for better contrast
-                allDay: true,  // Display event as an all-day event
-            });
+            // Get color from the courseColors object, or use a default color if the course is not listed
+            const courseColor = courseColors[course.name] ? courseColors[course.name] : '#000000'; // Default color: black
+
+            const date = assignment.due_at ? assignment.due_at.substring(0, 10) : '';
+            const assignmentEvent = {
+                title: assignment.name,
+                start: date,
+                end: date,
+                allDay: true,
+                color: courseColor,
+                task: { description: assignment.description, points: assignment.points_possible }
+            };
+            events.push(assignmentEvent);
         }
     }
 
-    return events;
+    return events;  // Return the array of JSON objects for all assignments
 }
+
+// Example call to test the function
+prepareAssignments().then(events => {
+    console.log(JSON.stringify(events, null, 2));  // Print the JSON objects for each assignment
+}).catch(error => {
+    console.error('Error preparing assignments:', error.message);
+});
+
+
