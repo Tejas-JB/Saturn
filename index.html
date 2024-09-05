@@ -19,7 +19,7 @@
   <link href="images/webclip.png" rel="apple-touch-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.css" type="text/css">
   <script defer="" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.min.js"></script>
-    
+  <script type="text/javascript" src="canvasEvents.js"></script>
   <style>
 .fc-widget-content {
 padding:7px!important;
@@ -129,7 +129,36 @@ align-items: stretch;
   -webkit-order:1;
 }
 }
+
 </style>
+<script type="module">
+  import { prepareAssignments } from './canvasEvents.js';
+
+  document.addEventListener('DOMContentLoaded', () => {
+      prepareAssignments().then(events => {
+          console.log(events);
+          alert(JSON.stringify(events, null, 2));
+
+          $('#divCalendar').fullCalendar('removeEvents');
+          $('#divCalendar').fullCalendar('addEventSource', events);
+      }).catch(error => {
+          console.error('Error preparing assignments:', error.message);
+      });
+
+      $('#divCalendar').fullCalendar({
+          header: {
+              left: 'prev,next, today',
+              center: 'title',
+              right: 'month,basicWeek,basicDay'
+          },
+          buttonText: {
+              prev: '<',
+              next: '>'
+          },
+          selectable: true
+      });
+  });
+  </script>
 </head>
 <body>
   <div class="section black">
@@ -174,9 +203,517 @@ align-items: stretch;
   </div>
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=66d65c3604c528b91025f7e8" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <script src="js/webflow.js" type="text/javascript"></script>
+    
   <script type="text/javascript">
 // my events array
-var myEvents = [];
+var myEvents = [
+  {
+    "title": "Getting to Know Mac Computers",
+    "start": "2024-08-15",
+    "end": "2024-08-15",
+    "allDay": true,
+    "color": "#d93561",
+    "task": {
+      "description": null,
+      "points": 5
+    }
+  },
+  {
+    "title": "30/15 Photo Challenge",
+    "start": "2024-08-21",
+    "end": "2024-08-21",
+    "allDay": true,
+    "color": "#d93561",
+    "task": {
+      "description": null,
+      "points": 10
+    }
+  },
+  {
+    "title": "Demo: Lightroom Classic",
+    "start": "2024-08-21",
+    "end": "2024-08-21",
+    "allDay": true,
+    "color": "#d93561",
+    "task": {
+      "description": null,
+      "points": 4
+    }
+  },
+  {
+    "title": "FR: Creativity Quote",
+    "start": "2024-08-21",
+    "end": "2024-08-21",
+    "allDay": true,
+    "color": "#d93561",
+    "task": {
+      "description": null,
+      "points": 5
+    }
+  },
+  {
+    "title": "LrC Editing Practice",
+    "start": "2024-08-27",
+    "end": "2024-08-27",
+    "allDay": true,
+    "color": "#d93561",
+    "task": {
+      "description": null,
+      "points": 8
+    }
+  },
+  {
+    "title": "Open Ended Project",
+    "start": "2024-08-27",
+    "end": "2024-08-27",
+    "allDay": true,
+    "color": "#d93561",
+    "task": {
+      "description": null,
+      "points": 12
+    }
+  },
+  {
+    "title": "Syllabus Scavenger Hunt (6th)",
+    "start": "2024-08-27",
+    "end": "2024-08-27",
+    "allDay": true,
+    "color": "#d93561",
+    "task": {
+      "description": null,
+      "points": 6
+    }
+  },
+  {
+    "title": "Study Guide: LrC & Basic Photo Terms",
+    "start": "2024-08-29",
+    "end": "2024-08-29",
+    "allDay": true,
+    "color": "#d93561",
+    "task": {
+      "description": null,
+      "points": 5
+    }
+  },
+  {
+    "title": "The Uncreative Challenge",
+    "start": "2024-08-29",
+    "end": "2024-08-29",
+    "allDay": true,
+    "color": "#d93561",
+    "task": {
+      "description": null,
+      "points": 10
+    }
+  },
+  {
+    "title": "P6 Quiz: Intro Unit",
+    "start": "2024-09-03",
+    "end": "2024-09-03",
+    "allDay": true,
+    "color": "#d93561",
+    "task": {
+      "description": null,
+      "points": 10
+    }
+  },
+  {
+    "title": "Zombie Apocalypse",
+    "start": "2024-08-14",
+    "end": "2024-08-14",
+    "allDay": true,
+    "color": "#FAE700",
+    "task": {
+      "description": "<p><span>CLASSWORK</span></p>\n<p><span>Great job participating in the Zombie Apocalypse simulation!</span></p>",
+      "points": 5
+    }
+  },
+  {
+    "title": "Who I Am Handout",
+    "start": "2024-08-16",
+    "end": "2024-08-16",
+    "allDay": true,
+    "color": "#FAE700",
+    "task": {
+      "description": "<p><span>HOMEWORK</span></p>\n<p><span>Please complete the Who I Am handout and prepare to submit it at the beginning of the class on Friday.</span></p>",
+      "points": 5
+    }
+  },
+  {
+    "title": "MCQ Reverse Engineering",
+    "start": "2024-09-04",
+    "end": "2024-09-04",
+    "allDay": true,
+    "color": "#FAE700",
+    "task": {
+      "description": "<p><span>HOMEWORK</span></p>\n<p><span>In the Diagnostic MCQ, choose two of the passages where you got 4 or more of the questions wrong.&nbsp; With those two passages, choose at least 3 questions you got wrong from each passage, and reverse engineer why the correct answer is what it is.&nbsp; Be prepared to verbally explain your reasoning during the next class.</span></p>",
+      "points": 5
+    }
+  },
+  {
+    "title": "Catcher in the Rye Parody",
+    "start": "2024-08-22",
+    "end": "2024-08-22",
+    "allDay": true,
+    "color": "#FAE700",
+    "task": {
+      "description": "<p><span>Classwork/Homework</span></p>\n<p><span>Create a one page parody about your favorite childhood movie, movie, or life in general.&nbsp; &nbsp;Remember your audience.&nbsp; Make sure it is appropriate.&nbsp; &nbsp;</span></p>",
+      "points": 15
+    }
+  },
+  {
+    "title": "CEJ #1",
+    "start": "2024-08-30",
+    "end": "2024-08-30",
+    "allDay": true,
+    "color": "#FAE700",
+    "task": {
+      "description": "<p><span>HOMEWORK</span></p>\n<p><span>Please submit your first CEJ to this assignment.</span></p>\n<p><span>Please note: &nbsp;If you're double-spacing the document, you'll need to have two pages total - one for summary and one for commentary. And that's just because there wouldn't be enough room to get all the necessary information on one page.&nbsp;&nbsp;If you single-space the document, you can fit it all on one page.</span></p>\n<p><a class=\"instructure_file_link instructure_scribd_file inline_disabled\" title=\"CEJ models Jan 2017.pdf\" href=\"https://canvas.instructure.com/courses/10269834/files/268924667?verifier=s5c6lCX4l2Q4pLkBNTwG6LDI2xjs6JYRpL4thztE&amp;wrap=1\" target=\"_blank\" data-canvas-previewable=\"false\" data-api-endpoint=\"https://canvas.instructure.com/api/v1/courses/10269834/files/268924667\" data-api-returntype=\"File\">CEJ models Jan 2017.pdf</a></p>\n<p><span><a class=\"instructure_file_link instructure_scribd_file inline_disabled\" title=\"Current Events Journal 2024.pdf\" href=\"https://canvas.instructure.com/courses/10269834/files/268924688?verifier=KrrPQkpMv2imYVHJHbDiLLEScdGmEaHNir46bZc1&amp;wrap=1\" target=\"_blank\" data-canvas-previewable=\"false\" data-api-endpoint=\"https://canvas.instructure.com/api/v1/courses/10269834/files/268924688\" data-api-returntype=\"File\">Current Events Journal 2024.pdf</a></span></p>",
+      "points": 10
+    }
+  },
+  {
+    "title": "Form Follows Function",
+    "start": "2024-08-28",
+    "end": "2024-08-28",
+    "allDay": true,
+    "color": "#FAE700",
+    "task": {
+      "description": "<p><span>CLASSWORK</span></p>",
+      "points": 10
+    }
+  },
+  {
+    "title": "Textbook",
+    "start": "",
+    "end": "",
+    "allDay": true,
+    "color": "#FAE700",
+    "task": {
+      "description": "<p>Catcher in the Rye</p>",
+      "points": 0
+    }
+  },
+  {
+    "title": "Linearizing Graphs WS",
+    "start": "2024-08-26",
+    "end": "2024-08-26",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": "<p><span>Solve all&nbsp;</span><span class=\"instructure_file_holder link_holder instructure_file_link_holder\"><a class=\"inline_disabled preview_in_overlay\" title=\"Graphs and Relationships.doc (1)-2.pdf\" href=\"https://cuhsd.instructure.com/courses/24305/files/8644736?wrap=1\" target=\"_blank\" data-canvas-previewable=\"false\" data-api-endpoint=\"https://cuhsd.instructure.com/api/v1/courses/24305/files/8644736\" data-api-returntype=\"File\">questions </a></span><span>on graph paper and upload.</span></p>\n<p><span><a class=\"instructure_file_link instructure_scribd_file inline_disabled\" title=\"Graphs and Relationships.doc (1)-2.pdf\" href=\"https://canvas.instructure.com/courses/10270484/files/268929042?verifier=tQ9OyHlwEjU65jZRciKffFlmXUbs38CC86Ft6cb5&amp;wrap=1\" target=\"_blank\" data-canvas-previewable=\"false\" data-api-endpoint=\"https://canvas.instructure.com/api/v1/courses/10270484/files/268929042\" data-api-returntype=\"File\">Graphs and Relationships.doc (1)-2.pdf</a></span></p>",
+      "points": 10
+    }
+  },
+  {
+    "title": "Literal equations WS",
+    "start": "2024-08-20",
+    "end": "2024-08-20",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": "<p>Solve all questions on page 3 on a<span>&nbsp;<strong>binder paper and upload.&nbsp;</strong>&nbsp; Pictures uploaded in any format except HEIC can be viewed on Canvas.</span></p>\n<p><span><a class=\"instructure_file_link instructure_scribd_file inline_disabled\" title=\"Practice_Solving_Literal_Equations.pdf\" href=\"https://canvas.instructure.com/courses/10270484/files/268929101?verifier=hLKDoauY1sobTBTPKwDyygQN23t04thYecjp8yEa&amp;wrap=1\" target=\"_blank\" data-canvas-previewable=\"false\" data-api-endpoint=\"https://canvas.instructure.com/api/v1/courses/10270484/files/268929101\" data-api-returntype=\"File\">Practice_Solving_Literal_Equations.pdf</a></span></p>",
+      "points": 10
+    }
+  },
+  {
+    "title": "Edpuzzle | Literal Equations",
+    "start": "2024-08-17",
+    "end": "2024-08-17",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": "",
+      "points": 8.41
+    }
+  },
+  {
+    "title": "Edpuzzle | Solving Literal Equations",
+    "start": "2024-08-17",
+    "end": "2024-08-17",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": "",
+      "points": 9.17
+    }
+  },
+  {
+    "title": "Edpuzzle | Metric System Review",
+    "start": "2024-08-17",
+    "end": "2024-08-17",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": "",
+      "points": 7.34
+    }
+  },
+  {
+    "title": "Extra practice Linearizing graphs",
+    "start": "",
+    "end": "",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": null,
+      "points": 0
+    }
+  },
+  {
+    "title": "Syllabus and Cell Phone Policy",
+    "start": "2024-08-16",
+    "end": "2024-08-16",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": null,
+      "points": 4
+    }
+  },
+  {
+    "title": " Signing up to AP Classroom",
+    "start": "2024-08-20",
+    "end": "2024-08-20",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": null,
+      "points": 4
+    }
+  },
+  {
+    "title": "Data Collecting Survey",
+    "start": "2024-08-20",
+    "end": "2024-08-20",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": null,
+      "points": 4
+    }
+  },
+  {
+    "title": "Section 1.1 Required Assignment",
+    "start": "2024-08-31",
+    "end": "2024-08-31",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": null,
+      "points": 4
+    }
+  },
+  {
+    "title": "Categorical Worksheets",
+    "start": "2024-08-20",
+    "end": "2024-08-20",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": null,
+      "points": 4
+    }
+  },
+  {
+    "title": "Quantitative Worksheet",
+    "start": "2024-08-22",
+    "end": "2024-08-22",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": null,
+      "points": 4
+    }
+  },
+  {
+    "title": " Comparing Distribution Worksheet",
+    "start": "2024-08-24",
+    "end": "2024-08-24",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": null,
+      "points": 4
+    }
+  },
+  {
+    "title": " Quiz on Data Types and Graphs",
+    "start": "2024-08-30",
+    "end": "2024-08-30",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": null,
+      "points": 4
+    }
+  },
+  {
+    "title": " Percentiles Classwork-sheet",
+    "start": "2024-08-28",
+    "end": "2024-08-28",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": null,
+      "points": 4
+    }
+  },
+  {
+    "title": "Normal Distribution Classwork-sheet",
+    "start": "2024-09-04",
+    "end": "2024-09-04",
+    "allDay": true,
+    "color": "#000000",
+    "task": {
+      "description": null,
+      "points": 4
+    }
+  },
+  {
+    "title": "Chap 2 Notes",
+    "start": "2024-08-29",
+    "end": "2024-08-29",
+    "allDay": true,
+    "color": "#4835d9",
+    "task": {
+      "description": "",
+      "points": 5
+    }
+  },
+  {
+    "title": "Chapter 2 Reading Quiz",
+    "start": "2024-08-29",
+    "end": "2024-08-29",
+    "allDay": true,
+    "color": "#4835d9",
+    "task": {
+      "description": null,
+      "points": 20
+    }
+  },
+  {
+    "title": "SAQ 1.1",
+    "start": "2024-08-21",
+    "end": "2024-08-21",
+    "allDay": true,
+    "color": "#4835d9",
+    "task": {
+      "description": "<p class=\"p1\">1. Briefly explain how ONE of the following factors in Europe in the early 16th century helped bring about a period of exploration and colonization of lands across the seas.</p>\n<p>religion<br>trade<br>technology</p>\n<p>&nbsp;</p>\n<p><span><strong>SAQ Requirements:</strong></span></p>\n<p>1. Rephrase the question in the first sentence</p>\n<p>2. Has historical evidence (people, places, events, dates, ect..)</p>\n<p>3. Includes analysis</p>\n<p>4. Do not quote the documents</p>",
+      "points": 4
+    }
+  },
+  {
+    "title": "SAQ 1.4",
+    "start": "2024-08-21",
+    "end": "2024-08-21",
+    "allDay": true,
+    "color": "#4835d9",
+    "task": {
+      "description": "<p>SAQ 1.4: Columbian Exchange</p>\n<p>A) Briefly explain ONE example of how contact between Native Americans and Europeans brought changes to Native American societies in the period of 1492-1700</p>\n<p>B) Briefly explain a Second example of how contact between Native Americans and Europeans brought changes to Native American societies in the same period.&nbsp;</p>\n<p>&nbsp;</p>\n<p>SAQ Requirements:</p>\n<p><span><strong>SAQ Requirements: (Claim, Evidence, Explanation)&nbsp;</strong></span></p>\n<p>1. Rephrase the question in the first sentence</p>\n<p>2. Has historical evidence (people, places, events, dates, ect..)</p>\n<p>3. Includes analysis</p>\n<p>4. Do not quote the documents</p>",
+      "points": 8
+    }
+  },
+  {
+    "title": "Textbook",
+    "start": "",
+    "end": "",
+    "allDay": true,
+    "color": "#4835d9",
+    "task": {
+      "description": "<h1 class=\"MuiTypography-root-786 jss768 jss772 jss762 jss766 MuiTypography-h1-791 MuiTypography-noWrap-805\" data-test-id=\"COPY OF Edwards, America's History for the AP® Course, 10e: COPY OF Edwards, America's History for the AP® Course, 10e\" aria-label=\"COPY OF Edwards, America's History for the AP® Course, 10e: COPY OF Edwards, America's History for the AP® Course, 10e\">COPY OF Edwards, America's History for the AP® Course, 10e: COPY OF Edwards, America's History for the AP® Course, 10e</h1>",
+      "points": 0
+    }
+  },
+  {
+    "title": "Mod. 0.4 CN",
+    "start": "2024-09-06",
+    "end": "2024-09-06",
+    "allDay": true,
+    "color": "#d96135",
+    "task": {
+      "description": "<p><strong>EQ #0.4</strong><span>: Why are research methods and experimental design important? (i.e. correlational vs. experimental; random sampling; independent vs. dependent variables)</span></p>",
+      "points": 5
+    }
+  },
+  {
+    "title": "Mod. 0.5 CN",
+    "start": "2024-09-06",
+    "end": "2024-09-06",
+    "allDay": true,
+    "color": "#d96135",
+    "task": {
+      "description": "<p><strong>EQ #0.5<span>:&nbsp;</span></strong>Why is it important to follow ethical guidelines for human and nonhuman research?&nbsp;</p>",
+      "points": 5
+    }
+  },
+  {
+    "title": "Mod. 0.6 CN",
+    "start": "2024-09-10",
+    "end": "2024-09-10",
+    "allDay": true,
+    "color": "#d96135",
+    "task": {
+      "description": "<p><strong>EQ #0.6</strong><span>: What are statistical measures and why are they used?</span></p>",
+      "points": 5
+    }
+  },
+  {
+    "title": "Green Sheet",
+    "start": "2024-08-28",
+    "end": "2024-08-28",
+    "allDay": true,
+    "color": "#d96135",
+    "task": {
+      "description": "<div id=\"content-wrapper\" class=\"ic-Layout-contentWrapper\">\n<div id=\"content\" class=\"ic-Layout-contentMain\" role=\"main\">\n<div id=\"assignment_show\" class=\"assignment content_underline_links\" data-lti-page-content=\"true\">\n<div class=\"description user_content enhanced\" data-resource-type=\"assignment.body\" data-resource-id=\"837779\">\n<p>Please get your Green Sheet slip signed by a guardian and return it to me!!<span class=\"module-sequence-footer-button--next\" style=\"float: right;\" data-tooltip=\"left\"><a class=\"Button\" href=\"https://cuhsd.instructure.com/courses/24036/modules/items/1519696\" aria-describedby=\"msf0-next-desc\" aria-label=\"Next Module Item\"><i class=\"icon-mini-arrow-right\"></i></a></span></p>\n</div>\n</div>\n</div>\n</div>\n<div id=\"right-side-wrapper\" class=\"ic-app-main-content__secondary\"></div>",
+      "points": 5
+    }
+  },
+  {
+    "title": "Intro Unit MCQ",
+    "start": "2024-08-28",
+    "end": "2024-08-28",
+    "allDay": true,
+    "color": "#d96135",
+    "task": {
+      "description": "<p>20 multiple choice - see study guide for terms.</p>\n<p>OPEN-NOTE.</p>\n<p>come prepared. dominate.</p>",
+      "points": 20
+    }
+  },
+  {
+    "title": "Intro Unit FRQ",
+    "start": "2024-08-28",
+    "end": "2024-08-28",
+    "allDay": true,
+    "color": "#d96135",
+    "task": {
+      "description": "<p>3 terms.</p>\n<p>STUDY VOCAB.</p>",
+      "points": 10
+    }
+  },
+  {
+    "title": "Mod. 0.1/0.2 + 0.3 CN",
+    "start": "2024-08-26",
+    "end": "2024-08-26",
+    "allDay": true,
+    "color": "#d96135",
+    "task": {
+      "description": "<p><strong>EQ #0.1 + 0.2</strong><span>: How can the scientific method help us draw more informed conclusions? Why is critical thinking important to science?</span></p>\n<p><strong>EQ #0.3</strong><span>: How do we use scientific methods&nbsp;to observe, describe, explain, and predict behavior?</span></p>\n<p>&nbsp;</p>\n<p><strong>CORNELL NOTE REMINDERS:</strong></p>\n<p><span>- Summary answers EQ in 2-3 sentences, including key terms; one summary per Module</span></p>\n<p><span>- 1-2 pages of CN per Module</span></p>\n<p><span>- DO NOT copy summaries from end of Modules/Units</span></p>\n<p><span>- DO NOT just write a list of defined key terms</span></p>\n<p><span>- if you don't use the question margin, don't include the question margin!!</span></p>\n<p><span>- interact with notes (highlight, write examples, compare to class notes, etc.)</span></p>",
+      "points": 10
+    }
+  },
+  {
+    "title": "Textbook",
+    "start": "",
+    "end": "",
+    "allDay": true,
+    "color": "#d96135",
+    "task": {
+      "description": "<h3 class=\"LC20lb MBeuO DKV0Md\">Myers' Psychology for the AP® Course, 4th Edition</h3>",
+      "points": 0
+    }
+  }
+];
 $(document).ready(function () {
 		// creating variables
     var eventTitle = 0;
